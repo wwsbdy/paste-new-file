@@ -1,44 +1,30 @@
-package com.zj.parsenewfile.handler;
+package com.zj.parsenewfile.handler.extension;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.regex.Pattern;
-
 /**
  * @author : jie.zhou
- * @date : 2025/9/23
+ * @date : 2025/9/24
  */
-@AllArgsConstructor
-public class DefaultHandler implements ILanguageHandler {
-
-    @NotNull
-    private final LanguageFileType fileType;
-    @Nullable
-    private final Pattern pattern;
-
+public class SqlHandler implements IExtensionHandler {
     @Override
     public @NotNull String getName() {
-        return fileType.getDefaultExtension();
+        return "SQL";
     }
 
     @Override
     public boolean notSupport(@Nullable String input) {
-        if (Objects.isNull(pattern)) {
-            return false;
-        }
         if (StringUtils.isBlank(input)) {
             return true;
         }
-        return !pattern.matcher(input.trim()).find();
+        return !input.startsWith("--") && !input.startsWith("select");
     }
 
     @Override
@@ -48,7 +34,7 @@ public class DefaultHandler implements ILanguageHandler {
         }
         String fileName = "unknown";
         PsiFile file = PsiFileFactory.getInstance(project)
-                .createFileFromText(fileName + "." + fileType.getDefaultExtension(), fileType, input);
+                .createFileFromText(fileName + ".sql", PlainTextFileType.INSTANCE, input);
         addFile(project, directory, file);
         return true;
     }

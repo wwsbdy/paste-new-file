@@ -1,5 +1,5 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.zj.parse-new-file">
-        <languageFileHandler implementation="com.zj.parsenewfile.handler.extension.JavaHandler"/>
+        <languageFileHandler implementation="com.zj.parsenewfile.handler.extension.SqlHandler"/>
     </extensions>
 </idea-plugin>

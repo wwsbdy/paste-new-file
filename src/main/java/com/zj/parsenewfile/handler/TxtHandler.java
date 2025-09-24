@@ -1,6 +1,7 @@
 package com.zj.parsenewfile.handler;
 
 import com.intellij.openapi.fileTypes.PlainTextFileType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author : jie.zhou
@@ -12,7 +13,7 @@ public class TxtHandler extends DefaultHandler {
     }
 
     @Override
-    public boolean support(String input) {
-        return true;
+    public boolean notSupport(@Nullable String input) {
+        return false;
     }
 }
