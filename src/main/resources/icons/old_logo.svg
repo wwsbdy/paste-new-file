@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <path d="M11,4
+           H22 Q23,4 24,5 L30,10
+           V12
+           M11,4 Q10,4 10,5 V14"
+          fill="none" stroke="#4E5153" stroke-width="1.2" stroke-linejoin="round"/>
+
+    <path d="M23,4.5 L23,10 H30 Z" fill="#4E5153" stroke="#4E5153" stroke-width="1.2" stroke-linejoin="round"/>
+
+    <path d="M10,26
+           V31 Q10,32 11,32
+           H29 Q30,32 30,31 V28"
+          fill="none" stroke="#4E5153" stroke-width="1.2" stroke-linejoin="round"/>
+
+    <rect x="8" y="16" width="24" height="8"
+          fill="#4E5153" stroke="#4E5153" stroke-width="1.2" stroke-linejoin="round"/>
+
+    <polygon points="30,14 36,20 30,26" fill="#4E5153" stroke="#4E5153" stroke-width="1.2" stroke-linejoin="round"/>
+    <text x="10" y="18.5" font-family="monospace" font-size="2" fill="#BB7232">
+        public class
+    </text>
+    <text x="10" y="18.5" font-family="monospace" font-size="2" fill="#98A5B2">
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Dog
+    </text>
+    <text x="10" y="21" font-family="monospace" font-size="2" fill="#DFB867">
+        &lt; r- &gt;/&lt;f: 1&gt; &gt;&gt;
+    </text>
+    <text x="10" y="23.5" font-family="monospace" font-size="2" fill="#F6E72B">
+        {&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}
+    </text>
+    <text x="10" y="23.5" font-family="monospace" font-size="2" fill="#9876AA">
+        &#160;"name"&#160;&#160;&#160;&#160;&#160;&#160;
+    </text>
+    <text x="10" y="23.5" font-family="monospace" font-size="2" fill="#CC7832">
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160;: &#160;&#160;&#160;&#160;
+    </text>
+    <text x="10" y="23.5" font-family="monospace" font-size="2" fill="#6A8759">
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"a"&#160;
+    </text>
+    <text x="20" y="36.5" font-family="Arial, Helvetica, sans-serif" font-size="3.6"
+          text-anchor="middle" fill="#9EA0A2" font-weight="700">
+        Parse New File
+    </text>
+</svg>

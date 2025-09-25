@@ -30,7 +30,7 @@
 
     <actions>
         <action id="parsenewfile.ParseNewFileAction" class="com.zj.parsenewfile.ui.ParseNewFileAction"
-                text="Parse New File">
+                text="Parse New File" icon="/icons/logo.svg">
             <add-to-group group-id="NewGroup"/>
             <add-to-group group-id="EditorPopupMenu"/>
         </action>
