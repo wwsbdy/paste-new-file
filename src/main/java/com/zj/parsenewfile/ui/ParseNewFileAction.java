@@ -10,7 +10,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.zj.parsenewfile.handler.ILanguageHandler;
-import com.zj.parsenewfile.utils.HandlerUtils;
+import com.zj.parsenewfile.utils.LanguageUtils;
 import com.zj.parsenewfile.utils.log.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,17 +33,19 @@ public class ParseNewFileAction extends AnAction {
         }
 
         // 弹出输入对话框
-        TextInputDialog dialog = new TextInputDialog();
+        TextInputDialog dialog = new TextInputDialog(project);
         if (!dialog.showAndGet()) {
             return;
         }
 
         String input = dialog.getInputText();
-        for (ILanguageHandler handler : HandlerUtils.getAllHandlers()) {
-            if (handler.handle(project, input, directory)) {
-                logger.info("处理成功");
-                return;
-            }
+        ILanguageHandler handler = LanguageUtils.getHandler(dialog.getLanguage());
+        if (handler == null) {
+            logger.info("handler == null");
+            return;
+        }
+        if (handler.handle(project, input, directory, dialog.getFileInfo())) {
+            logger.info("处理成功");
         }
     }
 

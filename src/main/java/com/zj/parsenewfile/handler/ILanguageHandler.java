@@ -1,11 +1,13 @@
 package com.zj.parsenewfile.handler;
 
+import com.intellij.ide.util.EditorHelper;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.zj.parsenewfile.utils.language.PluginBundle;
+import com.zj.parsenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,11 +21,12 @@ import java.util.Objects;
 public interface ILanguageHandler {
 
     @NotNull
-    String getName();
+    String getExtensionName();
 
-    boolean notSupport(@Nullable String input);
+    @Nullable
+    FileInfo support(@NotNull Project project, @Nullable String input);
 
-    boolean handle(@NotNull Project project, @Nullable String input, @NotNull PsiDirectory directory);
+    boolean handle(@NotNull Project project, @Nullable String input, @NotNull PsiDirectory directory, @Nullable FileInfo fileInfo);
 
     default void addFile(@NotNull Project project, @NotNull PsiDirectory directory, @NotNull PsiFile psiFile) {
         if (StringUtils.isEmpty(psiFile.getName())) {
@@ -45,11 +48,18 @@ public interface ILanguageHandler {
             if (checkFileExist(directory, renameFileName)) {
                 return;
             }
-            psiFile.setName(renameFileName);
+            rename(psiFile, renameFileName);
         }
         WriteCommandAction.runWriteCommandAction(project, () -> {
             directory.add(psiFile);
+            // 跳转到文件
+            // TODO psiFile.getVirtualFile() 为null，无法跳转
+            EditorHelper.openInEditor(psiFile);
         });
+    }
+
+    default void rename(@NotNull PsiFile psiFile, String renameFileName) {
+        psiFile.setName(renameFileName);
     }
 
     default boolean checkFileExist(PsiDirectory directory, String fileName) {

@@ -1,28 +1,68 @@
 package com.zj.parsenewfile.utils;
 
-import com.intellij.lang.java.JavaLanguage;
-import com.intellij.lang.xml.XMLLanguage;
-import com.zj.parsenewfile.vo.LanguageVo;
+import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
+import com.zj.parsenewfile.handler.*;
+import com.zj.parsenewfile.vo.FileInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author : jie.zhou
- * @date : 2025/9/23
+ * @date : 2025/9/24
  */
 public class LanguageUtils {
 
-    private static final List<LanguageVo> languageList;
+    private static final List<ILanguageHandler> HANDLERS;
+    private static final ExtensionPointName<ILanguageHandler> EP_NAME =
+            ExtensionPointName.create("com.zj.parse-new-file.languageFileHandler");
+    private static final JsonHandler JSON_HANDLER = new JsonHandler();
+    private static final HtmlHandler HTML_HANDLER = new HtmlHandler();
+    private static final XmlHandler XML_HANDLER = new XmlHandler();
+    private static final TxtHandler TXT_HANDLER = new TxtHandler();
 
     static {
-        languageList = List.of(
-                new LanguageVo(JavaLanguage.INSTANCE),
-                new LanguageVo(XMLLanguage.INSTANCE)
-        );
+        HANDLERS = new ArrayList<>();
+        HANDLERS.addAll(EP_NAME.getExtensionList());
+
+        HANDLERS.add(JSON_HANDLER);
+        HANDLERS.add(HTML_HANDLER);
+        HANDLERS.add(XML_HANDLER);
+        HANDLERS.add(TXT_HANDLER);
     }
 
-    public static List<LanguageVo> getAllLanguage() {
-        return languageList;
+    public static List<ILanguageHandler> getAllHandlers() {
+        return HANDLERS;
     }
 
+    @Nullable
+    public static ILanguageHandler getHandler(String language) {
+        if (Objects.isNull(language)) {
+            return null;
+        }
+        for (ILanguageHandler handler : HANDLERS) {
+            if (language.equals(handler.getExtensionName())) {
+                return handler;
+            }
+        }
+        return null;
+    }
+
+    public static FileInfo findLanguage(Project project, String content) {
+        if (StringUtils.isBlank(content)) {
+            return TxtHandler.FILE_INFO;
+        }
+        for (ILanguageHandler handler : HANDLERS) {
+            FileInfo fileInfo = handler.support(project, content);
+            if (Objects.isNull(fileInfo)) {
+                continue;
+            }
+            return fileInfo;
+        }
+        return TxtHandler.FILE_INFO;
+    }
 }

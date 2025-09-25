@@ -35,6 +35,9 @@
             <add-to-group group-id="EditorPopupMenu"/>
         </action>
     </actions>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.zj.parsenewfile.setting.Settings"/>
+    </extensions>
 
     <extensionPoints>
         <extensionPoint name="languageFileHandler"
