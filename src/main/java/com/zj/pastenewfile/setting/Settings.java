@@ -42,8 +42,4 @@ public final class Settings implements PersistentStateComponent<StateVo> {
     public void loadState(@NotNull StateVo state) {
         myState = state;
     }
-
-    private StateVo init() {
-        return new StateVo();
-    }
 }
