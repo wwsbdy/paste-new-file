@@ -29,8 +29,11 @@ public final class Settings implements PersistentStateComponent<StateVo> {
     @NotNull
     @Override
     public synchronized StateVo getState() {
-        if (Objects.isNull(myState) || myState.isEmpty()) {
-            return myState = init();
+        if (Objects.isNull(myState)) {
+            myState = new StateVo();
+        }
+        if (myState.isEmpty()) {
+            myState.setAutoParse(true);
         }
         return myState;
     }

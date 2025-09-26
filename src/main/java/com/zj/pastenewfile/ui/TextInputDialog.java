@@ -1,12 +1,16 @@
 package com.zj.pastenewfile.ui;
 
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
 import com.zj.pastenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.setting.Settings;
 import com.zj.pastenewfile.utils.LanguageUtils;
 import com.zj.pastenewfile.utils.language.PluginBundle;
 import com.zj.pastenewfile.utils.log.Logger;
@@ -20,8 +24,10 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +45,8 @@ public class TextInputDialog extends DialogWrapper {
     private TextFieldWithCompletion extensionNameTextField;
 
     private EditorTextField fileNameTextField;
+
+    private JBCheckBox autoParseCheckBox;
 
     /**
      * 剪贴板内容
@@ -73,17 +81,55 @@ public class TextInputDialog extends DialogWrapper {
 
     @Override
     protected @Nullable JComponent createNorthPanel() {
-        JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // 主面板使用BorderLayout，将居中内容放在CENTER，复选框放在EAST
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        // 创建原来的居中内容面板
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         fileNameTextField = new EditorTextField();
-        fileNameTextField.setText(fileInfo.getFileName());
         fileNameTextField.setEnabled(true);
         fileNameTextField.setPreferredSize(new Dimension(200, 30));
-        jPanel.add(fileNameTextField);
-        jPanel.add(new JLabel("."));
+        centerPanel.add(fileNameTextField);
+        centerPanel.add(new JLabel("."));
         extensionNameTextField = getExtensionNameTextField();
         extensionNameTextField.setPreferredSize(new Dimension(80, 30));
-        jPanel.add(extensionNameTextField);
-        return jPanel;
+        centerPanel.add(extensionNameTextField);
+        Settings settings = Settings.getInstance();
+        boolean autoParse = Optional.ofNullable(settings.getState().getAutoParse()).orElse(true);
+        if (autoParse) {
+            fileNameTextField.setText(fileInfo.getFileName());
+            extensionNameTextField.setText(fileInfo.getExtensionName());
+        } else {
+            extensionNameTextField.setText(settings.getState().getExtensionName());
+        }
+        // 创建复选框并放在右侧
+        autoParseCheckBox = new JBCheckBox(PluginBundle.get("dialog.checkbox.auto-parse"));
+        autoParseCheckBox.setSelected(autoParse);
+        autoParseCheckBox.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (autoParseCheckBox.isSelected()) {
+                    fileNameTextField.setText(fileInfo.getFileName());
+                    extensionNameTextField.setText(fileInfo.getExtensionName());
+                }
+                settings.getState().setAutoParse(autoParseCheckBox.isSelected());
+            }
+        });
+        // 文本内容变更时，实时更新字段
+        extensionNameTextField.addDocumentListener(new DocumentListener() {
+            @Override
+            public void documentChanged(@NotNull DocumentEvent event) {
+                settings.getState().setExtensionName(extensionNameTextField.getText());
+            }
+        });
+        JPanel checkBoxPanel = new JPanel(new BorderLayout());
+        checkBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        checkBoxPanel.add(autoParseCheckBox, BorderLayout.CENTER);
+
+        // 将各部分添加到主面板
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(checkBoxPanel, BorderLayout.EAST);
+
+        return mainPanel;
     }
 
     private @NotNull TextFieldWithCompletion getExtensionNameTextField() {
@@ -101,7 +147,7 @@ public class TextInputDialog extends DialogWrapper {
         return new TextFieldWithCompletion(
                 project,
                 provider,
-                fileInfo.getExtensionName(),
+                "",
                 true,
                 true,
                 false
@@ -136,6 +182,7 @@ public class TextInputDialog extends DialogWrapper {
         return this.textArea;
     }
 
+    @NotNull
     public FileInfo getFileInfo() {
         return new FileInfo(fileNameTextField.getText(), extensionNameTextField.getText());
     }

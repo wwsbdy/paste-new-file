@@ -12,6 +12,8 @@ import com.intellij.psi.PsiManager;
 import com.zj.pastenewfile.handler.ILanguageHandler;
 import com.zj.pastenewfile.utils.LanguageUtils;
 import com.zj.pastenewfile.utils.log.Logger;
+import com.zj.pastenewfile.vo.FileInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,6 +44,11 @@ public class PasteNewFileAction extends AnAction {
         ILanguageHandler handler = LanguageUtils.getHandler(dialog.getLanguage());
         if (handler == null) {
             logger.info("handler == null");
+            return;
+        }
+        FileInfo fileInfo = dialog.getFileInfo();
+        if (StringUtils.isBlank(fileInfo.getExtensionName())) {
+            logger.info("StringUtils.isBlank(fileInfo.getExtensionName())");
             return;
         }
         if (handler.handle(project, input, directory, dialog.getFileInfo())) {

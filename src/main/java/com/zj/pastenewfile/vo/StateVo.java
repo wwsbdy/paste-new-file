@@ -1,6 +1,7 @@
 package com.zj.pastenewfile.vo;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -11,10 +12,29 @@ import java.util.Objects;
 @Data
 public class StateVo {
 
-    private String fileType;
+    private Boolean autoParse;
+
+    private String extensionName;
 
     public boolean isEmpty() {
-        return Objects.isNull(fileType);
+        return Objects.isNull(autoParse);
     }
 
+    @NotNull
+    public String getExtensionName() {
+        String extensionName = null;
+        if (Objects.nonNull(autoParse) && !autoParse) {
+            extensionName = this.extensionName;
+        }
+        if (Objects.isNull(extensionName)) {
+            extensionName = "";
+        }
+        return extensionName;
+    }
+
+    public void setExtensionName(String extensionName) {
+        if (Objects.nonNull(autoParse) && !autoParse) {
+            this.extensionName = extensionName;
+        }
+    }
 }
