@@ -53,17 +53,16 @@ public class JavaHandler implements IExtensionHandler {
 
         if (tempFile instanceof PsiJavaFile javaFile) {
             // 1. 获取类名
-            if (StringUtils.isBlank(fileName)) {
-                String className;
-                if (javaFile.getClasses().length > 0) {
-                    className = javaFile.getClasses()[0].getName();
-                } else {
-                    logger.info("找不到类名");
-                    className = "Java";
+            if (javaFile.getClasses().length > 0 && StringUtils.isNotEmpty(fileName)) {
+                String newClass = fileName.replaceAll(".java", "");
+                String oldClass = javaFile.getClasses()[0].getName();
+                if (!newClass.equals(oldClass)) {
+                    javaFile.getClasses()[0].setName(newClass);
                 }
-                fileName = className + ".java";
+            } else {
+                logger.info("找不到类名");
+                fileName = "Java.java";
             }
-
             // 2. 替换/添加 package
             PsiPackageStatement oldPkgStmt = javaFile.getPackageStatement();
             PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);

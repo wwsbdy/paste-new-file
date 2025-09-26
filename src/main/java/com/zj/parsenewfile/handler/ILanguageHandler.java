@@ -53,8 +53,10 @@ public interface ILanguageHandler {
         WriteCommandAction.runWriteCommandAction(project, () -> {
             directory.add(psiFile);
             // 跳转到文件
-            // TODO psiFile.getVirtualFile() 为null，无法跳转
-            EditorHelper.openInEditor(psiFile);
+            PsiFile jumpFile = directory.findFile(psiFile.getName());
+            if (jumpFile != null) {
+                EditorHelper.openInEditor(jumpFile);
+            }
         });
     }
 
