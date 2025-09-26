@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.utils;
+package com.zj.pastenewfile.utils;
 
 import com.intellij.openapi.util.IconLoader;
 

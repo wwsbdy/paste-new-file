@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.handler;
+package com.zj.pastenewfile.handler;
 
 import com.intellij.ide.highlighter.HtmlFileType;
 

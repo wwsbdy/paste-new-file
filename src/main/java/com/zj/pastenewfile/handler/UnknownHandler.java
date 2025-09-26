@@ -1,11 +1,11 @@
-package com.zj.parsenewfile.handler;
+package com.zj.pastenewfile.handler;
 
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.vo.FileInfo;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

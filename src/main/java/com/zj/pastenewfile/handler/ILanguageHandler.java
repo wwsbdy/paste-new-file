@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.handler;
+package com.zj.pastenewfile.handler;
 
 import com.intellij.ide.util.EditorHelper;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -6,8 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.zj.parsenewfile.utils.language.PluginBundle;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.utils.language.PluginBundle;
+import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

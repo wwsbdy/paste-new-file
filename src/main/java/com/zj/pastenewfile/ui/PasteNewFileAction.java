@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.ui;
+package com.zj.pastenewfile.ui;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -9,18 +9,18 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.zj.parsenewfile.handler.ILanguageHandler;
-import com.zj.parsenewfile.utils.LanguageUtils;
-import com.zj.parsenewfile.utils.log.Logger;
+import com.zj.pastenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.utils.LanguageUtils;
+import com.zj.pastenewfile.utils.log.Logger;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author : jie.zhou
  * @date : 2025/9/23
  */
-public class ParseNewFileAction extends AnAction {
+public class PasteNewFileAction extends AnAction {
 
-    private static final Logger logger = Logger.getInstance(ParseNewFileAction.class);
+    private static final Logger logger = Logger.getInstance(PasteNewFileAction.class);
 
     @Override
     public void actionPerformed(AnActionEvent e) {

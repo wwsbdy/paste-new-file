@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.utils.language;
+package com.zj.pastenewfile.utils.language;
 
 import org.jetbrains.annotations.NotNull;
 

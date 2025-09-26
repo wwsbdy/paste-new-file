@@ -1,8 +1,8 @@
-package com.zj.parsenewfile.handler;
+package com.zj.pastenewfile.handler;
 
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.vo.FileInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

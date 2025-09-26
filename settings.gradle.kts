@@ -1,1 +1,1 @@
-rootProject.name = "parse-new-file"
+rootProject.name = "paste-new-file"

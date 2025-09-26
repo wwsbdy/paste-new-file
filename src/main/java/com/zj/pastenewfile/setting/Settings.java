@@ -1,10 +1,10 @@
-package com.zj.parsenewfile.setting;
+package com.zj.pastenewfile.setting;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.zj.parsenewfile.vo.StateVo;
+import com.zj.pastenewfile.vo.StateVo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author : jie.zhou
  * @date : 2025/9/25
  */
-@State(name = "ParseNewFileSettings", storages = @Storage("parseNewFile/ParseNewFileSettings.xml"))
+@State(name = "PasteNewFileSettings", storages = @Storage("pasteNewFile/PasteNewFileSettings.xml"))
 public final class Settings implements PersistentStateComponent<StateVo> {
 
 

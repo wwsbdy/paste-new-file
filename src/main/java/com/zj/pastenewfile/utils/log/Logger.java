@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.utils.log;
+package com.zj.pastenewfile.utils.log;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;

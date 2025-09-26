@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.ui;
+package com.zj.pastenewfile.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -6,11 +6,11 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.ui.TextFieldWithAutoCompletionListProvider;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.textCompletion.TextFieldWithCompletion;
-import com.zj.parsenewfile.handler.ILanguageHandler;
-import com.zj.parsenewfile.utils.LanguageUtils;
-import com.zj.parsenewfile.utils.language.PluginBundle;
-import com.zj.parsenewfile.utils.log.Logger;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.utils.LanguageUtils;
+import com.zj.pastenewfile.utils.language.PluginBundle;
+import com.zj.pastenewfile.utils.log.Logger;
+import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

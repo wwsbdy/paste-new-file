@@ -1,4 +1,4 @@
-package com.zj.parsenewfile.vo;
+package com.zj.pastenewfile.vo;
 
 import lombok.Data;
 

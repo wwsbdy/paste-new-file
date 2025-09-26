@@ -1,10 +1,10 @@
-package com.zj.parsenewfile.handler.extension;
+package com.zj.pastenewfile.handler.extension;
 
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.zj.parsenewfile.utils.log.Logger;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.utils.log.Logger;
+import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>com.zj.parse-new-file</id>
+    <id>com.zj.paste-new-file</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Parse New File</name>
+    <name>Paste New File</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor>wwsbdy</vendor>
@@ -29,19 +29,19 @@
 
 
     <actions>
-        <action id="parsenewfile.ParseNewFileAction" class="com.zj.parsenewfile.ui.ParseNewFileAction"
-                text="Parse New File" icon="/icons/logo.svg">
+        <action id="pastenewfile.PasteNewFileAction" class="com.zj.pastenewfile.ui.PasteNewFileAction"
+                text="Paste New File" icon="/icons/logo.svg">
             <add-to-group group-id="NewGroup"/>
             <add-to-group group-id="EditorPopupMenu"/>
         </action>
     </actions>
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.zj.parsenewfile.setting.Settings"/>
+        <applicationService serviceImplementation="com.zj.pastenewfile.setting.Settings"/>
     </extensions>
 
     <extensionPoints>
         <extensionPoint name="languageFileHandler"
-                        interface="com.zj.parsenewfile.handler.extension.IExtensionHandler"
+                        interface="com.zj.pastenewfile.handler.extension.IExtensionHandler"
                         dynamic="true"/>
     </extensionPoints>
 </idea-plugin>

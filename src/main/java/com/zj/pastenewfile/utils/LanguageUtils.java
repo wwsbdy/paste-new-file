@@ -1,9 +1,9 @@
-package com.zj.parsenewfile.utils;
+package com.zj.pastenewfile.utils;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.zj.parsenewfile.handler.*;
-import com.zj.parsenewfile.vo.FileInfo;
+import com.zj.pastenewfile.handler.*;
+import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public class LanguageUtils {
 
     private static final List<ILanguageHandler> HANDLERS;
     private static final ExtensionPointName<ILanguageHandler> EP_NAME =
-            ExtensionPointName.create("com.zj.parse-new-file.languageFileHandler");
+            ExtensionPointName.create("com.zj.paste-new-file.languageFileHandler");
     private static final JsonHandler JSON_HANDLER = new JsonHandler();
     private static final HtmlHandler HTML_HANDLER = new HtmlHandler();
     private static final XmlHandler XML_HANDLER = new XmlHandler();

@@ -1,6 +1,6 @@
-package com.zj.parsenewfile.enums;
+package com.zj.pastenewfile.enums;
 
-import com.zj.parsenewfile.handler.*;
+import com.zj.pastenewfile.handler.*;
 import lombok.Getter;
 
 /**

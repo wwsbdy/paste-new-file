@@ -1,6 +1,6 @@
-package com.zj.parsenewfile.handler.extension;
+package com.zj.pastenewfile.handler.extension;
 
-import com.zj.parsenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.handler.ILanguageHandler;
 
 /**
  * @author : jie.zhou
