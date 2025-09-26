@@ -73,14 +73,15 @@ public class TextInputDialog extends DialogWrapper {
 
     @Override
     protected @Nullable JComponent createNorthPanel() {
-        JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         fileNameTextField = new EditorTextField();
         fileNameTextField.setText(fileInfo.getFileName());
         fileNameTextField.setEnabled(true);
+        fileNameTextField.setPreferredSize(new Dimension(200, 30));
         jPanel.add(fileNameTextField);
         jPanel.add(new JLabel("."));
         extensionNameTextField = getExtensionNameTextField();
-        extensionNameTextField.setPreferredSize(new Dimension(200, 30));
+        extensionNameTextField.setPreferredSize(new Dimension(80, 30));
         jPanel.add(extensionNameTextField);
         return jPanel;
     }
