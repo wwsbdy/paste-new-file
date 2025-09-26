@@ -12,8 +12,14 @@ import java.util.Objects;
 @Data
 public class StateVo {
 
+    /**
+     * 是否自动解析
+     */
     private Boolean autoParse;
 
+    /**
+     * 自定义扩展名
+     */
     private String extensionName;
 
     public boolean isEmpty() {
