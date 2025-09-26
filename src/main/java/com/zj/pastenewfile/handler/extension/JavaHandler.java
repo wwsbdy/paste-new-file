@@ -32,7 +32,8 @@ public class JavaHandler implements IExtensionHandler {
         }
         PsiFile tempFile = PsiFileFactory.getInstance(project)
                 .createFileFromText("Temp121.java", JavaFileType.INSTANCE, input);
-        if (tempFile instanceof PsiJavaFile javaFile) {
+        if (tempFile instanceof PsiJavaFile) {
+            PsiJavaFile javaFile = (PsiJavaFile) tempFile;
             // 1. 获取类名
             return javaFile.getClasses().length > 0
                     && StringUtils.isNotBlank(javaFile.getClasses()[0].getName())
@@ -52,7 +53,8 @@ public class JavaHandler implements IExtensionHandler {
         String fileName = Objects.isNull(fileInfo) ? null : fileInfo.getFileName() + ".java";
         PsiFile file;
 
-        if (tempFile instanceof PsiJavaFile javaFile) {
+        if (tempFile instanceof PsiJavaFile) {
+            PsiJavaFile javaFile = (PsiJavaFile) tempFile;
             // 1. 获取类名
             if (javaFile.getClasses().length > 0 && StringUtils.isNotEmpty(fileName)) {
                 String newClass = fileName.replaceAll(".java", "");
@@ -91,7 +93,8 @@ public class JavaHandler implements IExtensionHandler {
     @Override
     public void rename(@NotNull PsiFile psiFile, String renameFileName) {
         Project project = psiFile.getProject();
-        if (psiFile instanceof PsiJavaFile javaFile) {
+        if (psiFile instanceof PsiJavaFile) {
+            PsiJavaFile javaFile = (PsiJavaFile) psiFile;
             if (javaFile.getClasses().length > 0) {
                 PsiClass psiClass = javaFile.getClasses()[0];
                 String newName = renameFileName.replaceAll(".java", "");
