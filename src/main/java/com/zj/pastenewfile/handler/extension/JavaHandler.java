@@ -1,6 +1,7 @@
 package com.zj.pastenewfile.handler.extension;
 
 import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.zj.pastenewfile.utils.log.Logger;
@@ -57,7 +58,8 @@ public class JavaHandler implements IExtensionHandler {
                 String newClass = fileName.replaceAll(".java", "");
                 String oldClass = javaFile.getClasses()[0].getName();
                 if (!newClass.equals(oldClass)) {
-                    javaFile.getClasses()[0].setName(newClass);
+                    PsiClass psiClass = javaFile.getClasses()[0];
+                    renameClass(newClass, psiClass, project);
                 }
             } else {
                 logger.info("找不到类名");
@@ -88,11 +90,71 @@ public class JavaHandler implements IExtensionHandler {
 
     @Override
     public void rename(@NotNull PsiFile psiFile, String renameFileName) {
+        Project project = psiFile.getProject();
         if (psiFile instanceof PsiJavaFile javaFile) {
             if (javaFile.getClasses().length > 0) {
-                javaFile.getClasses()[0].setName(renameFileName.replaceAll(".java", ""));
+                PsiClass psiClass = javaFile.getClasses()[0];
+                String newName = renameFileName.replaceAll(".java", "");
+                renameClass(newName, psiClass, project);
             }
         }
         IExtensionHandler.super.rename(psiFile, renameFileName);
+    }
+
+    private void renameClass(String newName, PsiClass psiClass, Project project) {
+        String oldName = psiClass.getName();
+
+        PsiElementFactory factory = JavaPsiFacade.getElementFactory(project);
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            // 改类名
+            psiClass.setName(newName);
+            // 更新方法签名
+            for (PsiMethod method : psiClass.getMethods()) {
+                // 返回类型
+                PsiTypeElement returnTypeElement = method.getReturnTypeElement();
+                if (returnTypeElement != null && returnTypeElement.getText().equals(oldName)) {
+                    returnTypeElement.replace(factory.createTypeElement(
+                            factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
+                    ));
+                }
+
+                // 参数类型
+                for (PsiParameter param : method.getParameterList().getParameters()) {
+                    PsiTypeElement typeElement = param.getTypeElement();
+                    if (typeElement != null && typeElement.getText().equals(oldName)) {
+                        typeElement.replace(factory.createTypeElement(
+                                factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
+                        ));
+                    }
+                }
+            }
+            // 更新方法体内部的引用
+            psiClass.accept(new JavaRecursiveElementVisitor() {
+                @Override
+                public void visitClassObjectAccessExpression(PsiClassObjectAccessExpression expression) {
+                    super.visitClassObjectAccessExpression(expression);
+
+                    PsiTypeElement typeElement = expression.getOperand();
+                    if (typeElement.getText().equals(oldName)) {
+                        PsiTypeElement newType = factory.createTypeElement(
+                                factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
+                        );
+                        typeElement.replace(newType);
+                    }
+                }
+
+                @Override
+                public void visitReferenceElement(PsiJavaCodeReferenceElement reference) {
+                    super.visitReferenceElement(reference);
+                    // 这里也可以处理普通引用
+                    if (reference.getText().equals(oldName)) {
+                        try {
+                            reference.bindToElement(psiClass);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+            });
+        });
     }
 }
