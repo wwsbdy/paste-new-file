@@ -14,10 +14,9 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    从粘贴板获取内容并解析为文件.<br>
-    从粘贴板获取内容并解析为文件.<br>
-    从粘贴板获取内容并解析为文件.<br>
-    从粘贴板获取内容并解析为文件.<br>
+    Retrieve content from the clipboard and parse it into a file.<br>
+    <br>
+    从粘贴板获取内容并解析为文件.
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
