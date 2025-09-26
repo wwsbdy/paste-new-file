@@ -53,7 +53,7 @@ public class TextInputDialog extends DialogWrapper {
      */
     private String clipboardText;
 
-    private FileInfo fileInfo;
+    private final FileInfo fileInfo;
 
     public TextInputDialog(Project project) {
         super(true);
@@ -69,13 +69,13 @@ public class TextInputDialog extends DialogWrapper {
             if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 // 从剪贴板获取文本
                 clipboardText = (String) contents.getTransferData(DataFlavor.stringFlavor);
-                fileInfo = LanguageUtils.findLanguage(project, clipboardText);
             } else {
                 logger.info("剪贴板中没有文本内容或内容类型不支持");
             }
         } catch (Exception ex) {
             logger.info("获取剪贴板内容失败：" + ex.getMessage());
         }
+        fileInfo = LanguageUtils.findLanguage(project, clipboardText);
         init();
     }
 

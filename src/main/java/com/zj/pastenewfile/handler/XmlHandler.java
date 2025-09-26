@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * @date : 2025/9/23
  */
 public class XmlHandler extends DefaultHandler {
-    private static final Pattern PATTERN_ANGLE_BRACKET_START = Pattern.compile("^\\s*<[A-Za-z_]");
+    private static final Pattern PATTERN_ANGLE_BRACKET_START = Pattern.compile("^\\s*<");
 
     public XmlHandler() {
         super(XmlFileType.INSTANCE, PATTERN_ANGLE_BRACKET_START);

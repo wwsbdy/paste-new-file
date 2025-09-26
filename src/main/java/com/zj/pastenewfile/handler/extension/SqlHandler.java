@@ -38,7 +38,8 @@ public class SqlHandler implements IExtensionHandler {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-        input = input.trim().toLowerCase().substring(0, Math.min(10, input.length()));
+        input = input.trim();
+        input = input.toLowerCase().substring(0, Math.min(10, input.length()));
         return input.startsWith("--")
                 || EXTENSIONS.stream().anyMatch(input::startsWith)
                 ? new FileInfo(getExtensionName()) : null;
