@@ -5,11 +5,11 @@ fun properties(key: String) =
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.14.1"
+    id("org.jetbrains.intellij") version "1.0"
 }
 
 group = "com.zj"
-version = "${properties("plugin.version")}-SNAPSHOT"
+version = "${properties("plugin.version")}-201"
 
 intellij {
     version.set(properties("intellij.version"))
