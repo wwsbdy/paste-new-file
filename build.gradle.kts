@@ -6,7 +6,6 @@ fun properties(key: String) =
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.14.1"
-    kotlin("jvm")
 }
 
 group = "com.zj"
@@ -35,7 +34,6 @@ dependencies {
     testImplementation("junit:junit:4.13.1")
     testCompileOnly("org.projectlombok:lombok:1.18.34")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
@@ -146,7 +144,4 @@ fun parseChangeNotesFromReadme(): String {
     }
 
     return result.toString()
-}
-kotlin {
-    jvmToolchain(17)
 }
