@@ -62,6 +62,7 @@ public class KotlinHandler extends JavaHandler {
                 String oldClass = ktFile.getClasses()[0].getName();
                 if (!newClass.equals(oldClass)) {
                     PsiClass psiClass = ktFile.getClasses()[0];
+                    // TODO 没有改名成功
                     renameClass(newClass, psiClass, project);
                 }
             } else {

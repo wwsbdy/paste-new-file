@@ -10,6 +10,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.zj.pastenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.handler.UnknownHandler;
 import com.zj.pastenewfile.utils.LanguageUtils;
 import com.zj.pastenewfile.utils.log.Logger;
 import com.zj.pastenewfile.vo.FileInfo;
@@ -44,7 +45,7 @@ public class PasteNewFileAction extends AnAction {
         ILanguageHandler handler = LanguageUtils.getHandler(dialog.getLanguage());
         if (handler == null) {
             logger.info("handler == null");
-            return;
+            handler = new UnknownHandler(dialog.getLanguage());
         }
         FileInfo fileInfo = dialog.getFileInfo();
         if (StringUtils.isBlank(fileInfo.getExtensionName())) {
