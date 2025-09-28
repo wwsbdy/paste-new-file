@@ -15,8 +15,10 @@
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
     Retrieve content from the clipboard and parse it into a file.<br>
+    Shortcut keys: alt+V (option+V)<br>
     <br>
-    从粘贴板获取内容并解析为文件.
+    从粘贴板获取内容并解析为文件<br>
+    快捷键：alt+V（option+V）
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -25,11 +27,14 @@
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="java-support.xml">com.intellij.java</depends>
     <depends optional="true" config-file="database-support.xml">com.intellij.database</depends>
+    <depends optional="true" config-file="kotlin-support.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="yaml-support.xml">org.jetbrains.plugins.yaml</depends>
 
 
     <actions>
         <action id="pastenewfile.PasteNewFileAction" class="com.zj.pastenewfile.ui.PasteNewFileAction"
                 text="Paste New File" icon="/icons/logo.svg">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt V"/>
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewDir"/>
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Copy.Paste.Special"/>
         </action>

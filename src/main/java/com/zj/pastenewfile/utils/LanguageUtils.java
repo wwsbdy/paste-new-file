@@ -24,6 +24,7 @@ public class LanguageUtils {
     private static final HtmlHandler HTML_HANDLER = new HtmlHandler();
     private static final XmlHandler XML_HANDLER = new XmlHandler();
     private static final TxtHandler TXT_HANDLER = new TxtHandler();
+    private static final PropertiesHandler PROPERTIES_HANDLER = new PropertiesHandler();
 
     static {
         HANDLERS = new ArrayList<>();
@@ -32,6 +33,7 @@ public class LanguageUtils {
         HANDLERS.add(JSON_HANDLER);
         HANDLERS.add(HTML_HANDLER);
         HANDLERS.add(XML_HANDLER);
+        HANDLERS.add(PROPERTIES_HANDLER);
         HANDLERS.add(TXT_HANDLER);
     }
 

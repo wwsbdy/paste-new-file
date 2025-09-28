@@ -4,6 +4,7 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.zj.pastenewfile.utils.log.Logger;
 import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,7 @@ public class JavaHandler implements IExtensionHandler {
             return null;
         }
         PsiFile tempFile = PsiFileFactory.getInstance(project)
-                .createFileFromText("Temp121.java", JavaFileType.INSTANCE, input);
+                .createFileFromText("Temp121" + "." + getExtensionName(), JavaFileType.INSTANCE, input);
         if (tempFile instanceof PsiJavaFile) {
             PsiJavaFile javaFile = (PsiJavaFile) tempFile;
             // 1. 获取类名
@@ -49,15 +50,15 @@ public class JavaHandler implements IExtensionHandler {
         }
         // 先用 PsiFileFactory 解析输入文本
         PsiFile tempFile = PsiFileFactory.getInstance(project)
-                .createFileFromText("Temp.java", JavaFileType.INSTANCE, input);
-        String fileName = Objects.isNull(fileInfo) ? null : fileInfo.getFileName() + ".java";
+                .createFileFromText("Temp" + "." + getExtensionName(), JavaFileType.INSTANCE, input);
+        String fileName = Objects.isNull(fileInfo) ? null : fileInfo.getFileName() + "." + getExtensionName();
         PsiFile file;
 
         if (tempFile instanceof PsiJavaFile) {
             PsiJavaFile javaFile = (PsiJavaFile) tempFile;
             // 1. 获取类名
             if (javaFile.getClasses().length > 0 && StringUtils.isNotEmpty(fileName)) {
-                String newClass = fileName.replaceAll(".java", "");
+                String newClass = fileName.replaceAll("." + getExtensionName(), "");
                 String oldClass = javaFile.getClasses()[0].getName();
                 if (!newClass.equals(oldClass)) {
                     PsiClass psiClass = javaFile.getClasses()[0];
@@ -65,7 +66,7 @@ public class JavaHandler implements IExtensionHandler {
                 }
             } else {
                 logger.info("找不到类名");
-                fileName = "Java.java";
+                fileName = "Java" + "." + getExtensionName();
             }
             // 2. 替换/添加 package
             PsiPackageStatement oldPkgStmt = javaFile.getPackageStatement();
@@ -82,7 +83,7 @@ public class JavaHandler implements IExtensionHandler {
             file = javaFile;
         } else {
             // fallback: 无法解析成 Java 文件
-            fileName = fileName == null ? "Java.java" : fileName + ".java";
+            fileName = fileName == null ? "Java" + "." + getExtensionName() : fileName + "." + getExtensionName();
             file = PsiFileFactory.getInstance(project)
                     .createFileFromText(fileName, JavaFileType.INSTANCE, input);
         }
@@ -97,63 +98,85 @@ public class JavaHandler implements IExtensionHandler {
             PsiJavaFile javaFile = (PsiJavaFile) psiFile;
             if (javaFile.getClasses().length > 0) {
                 PsiClass psiClass = javaFile.getClasses()[0];
-                String newName = renameFileName.replaceAll(".java", "");
+                String newName = renameFileName.replaceAll("." + getExtensionName(), "");
                 renameClass(newName, psiClass, project);
             }
         }
         IExtensionHandler.super.rename(psiFile, renameFileName);
     }
 
-    private void renameClass(String newName, PsiClass psiClass, Project project) {
+    public void renameClass(String newName, PsiClass psiClass, Project project) {
         String oldName = psiClass.getName();
+        if (oldName == null) {
+            return;
+        }
 
         PsiElementFactory factory = JavaPsiFacade.getElementFactory(project);
+        GlobalSearchScope scope = psiClass.getResolveScope();
+
         WriteCommandAction.runWriteCommandAction(project, () -> {
             // 改类名
             psiClass.setName(newName);
+
             // 更新方法签名
             for (PsiMethod method : psiClass.getMethods()) {
                 // 返回类型
-                PsiTypeElement returnTypeElement = method.getReturnTypeElement();
-                if (returnTypeElement != null && returnTypeElement.getText().equals(oldName)) {
-                    returnTypeElement.replace(factory.createTypeElement(
-                            factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
-                    ));
+                PsiType returnType = method.getReturnType();
+                if (returnType != null && returnType.equalsToText(oldName)) {
+                    method.getReturnTypeElement().replace(
+                            factory.createTypeElement(factory.createTypeByFQClassName(newName, scope))
+                    );
                 }
 
                 // 参数类型
                 for (PsiParameter param : method.getParameterList().getParameters()) {
-                    PsiTypeElement typeElement = param.getTypeElement();
-                    if (typeElement != null && typeElement.getText().equals(oldName)) {
-                        typeElement.replace(factory.createTypeElement(
-                                factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
-                        ));
+                    PsiType paramType = param.getType();
+                    if (Objects.nonNull(param.getTypeElement()) && paramType.equalsToText(oldName)) {
+                        param.getTypeElement().replace(
+                                factory.createTypeElement(factory.createTypeByFQClassName(newName, scope))
+                        );
                     }
                 }
             }
-            // 更新方法体内部的引用
+
+            // 更新方法体内部的引用，包括泛型
             psiClass.accept(new JavaRecursiveElementVisitor() {
                 @Override
-                public void visitClassObjectAccessExpression(PsiClassObjectAccessExpression expression) {
-                    super.visitClassObjectAccessExpression(expression);
+                public void visitTypeElement(PsiTypeElement type) {
+                    super.visitTypeElement(type);
 
-                    PsiTypeElement typeElement = expression.getOperand();
-                    if (typeElement.getText().equals(oldName)) {
-                        PsiTypeElement newType = factory.createTypeElement(
-                                factory.createTypeByFQClassName(newName, psiClass.getResolveScope())
-                        );
-                        typeElement.replace(newType);
+                    PsiType psiType = type.getType();
+                    if (psiType instanceof PsiClassType) {
+                        PsiClass resolved = ((PsiClassType) psiType).resolve();
+                        if (resolved != null && oldName.equals(resolved.getName())) {
+                            PsiClassType newClassType = factory.createTypeByFQClassName(newName, scope);
+                            type.replace(factory.createTypeElement(newClassType));
+                        }
                     }
                 }
 
                 @Override
                 public void visitReferenceElement(PsiJavaCodeReferenceElement reference) {
                     super.visitReferenceElement(reference);
-                    // 这里也可以处理普通引用
-                    if (reference.getText().equals(oldName)) {
+
+                    PsiElement resolved = reference.resolve();
+                    if (resolved instanceof PsiClass && oldName.equals(((PsiClass) resolved).getName())) {
                         try {
                             reference.bindToElement(psiClass);
                         } catch (Exception ignored) {
+                        }
+                    }
+                }
+
+                @Override
+                public void visitClassObjectAccessExpression(PsiClassObjectAccessExpression expression) {
+                    super.visitClassObjectAccessExpression(expression);
+                    PsiType type = expression.getOperand().getType();
+                    if (type instanceof PsiClassType) {
+                        PsiClass resolved = ((PsiClassType) type).resolve();
+                        if (resolved != null && oldName.equals(resolved.getName())) {
+                            PsiClassType newClassType = factory.createTypeByFQClassName(newName, scope);
+                            expression.getOperand().replace(factory.createTypeElement(newClassType));
                         }
                     }
                 }

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * @date : 2025/9/23
  */
 public class HtmlHandler extends DefaultHandler {
-    private static final Pattern PATTERN_HTML_ROOT = Pattern.compile("<html(?=\\s|>).*?>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN_HTML_ROOT = Pattern.compile("^\\s*<html(?=\\s|>).*?>", Pattern.CASE_INSENSITIVE);
 
     public HtmlHandler() {
         super(HtmlFileType.INSTANCE, PATTERN_HTML_ROOT);
