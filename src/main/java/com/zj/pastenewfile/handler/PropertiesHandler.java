@@ -10,12 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Properties;
 
 /**
  * @author : jie.zhou
@@ -33,24 +28,34 @@ public class PropertiesHandler implements ILanguageHandler {
             return null;
         }
 
-        Properties properties = new Properties();
+        String text = input.trim();
+        String lower = text.toLowerCase();
 
-        // 将字符串转换为输入流进行Properties格式验证
-        try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
-            // 尝试加载Properties，如果格式错误会抛出IOException
-            properties.load(inputStream);
-            if (!properties.isEmpty()) {
-                return new FileInfo(getExtensionName());
+        // 1. 文件名后缀判断
+        if (lower.endsWith(".properties")) {
+            return new FileInfo("properties");
+        }
+
+        String[] lines = text.split("\\r?\\n");
+        int validCount = 0;
+        int totalCount = 0;
+
+        for (String line : lines) {
+            line = line.trim();
+            if (line.isEmpty() || line.startsWith("#") || line.startsWith("!")) {
+                continue;
             }
+            totalCount++;
 
-        } catch (IOException e) {
-            // 捕获IOException说明Properties格式无效
-            System.err.println("Invalid Properties format: " + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            // 处理其他可能的异常
-            System.err.println("Error processing Properties: " + e.getMessage());
-            return null;
+            // 典型的 properties key=value 格式，key 不允许有空格
+            if (line.matches("^[^\\s=:+]+\\s*[=:]\\s*.+$")) {
+                validCount++;
+            }
+        }
+
+        // 必须有至少一行，并且大部分行都是有效的 key=value
+        if (totalCount > 0 && validCount * 2 >= totalCount) {
+            return new FileInfo("properties");
         }
 
         return null;

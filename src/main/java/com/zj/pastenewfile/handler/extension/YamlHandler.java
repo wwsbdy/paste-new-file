@@ -10,10 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.yaml.YAMLFileType;
-import org.jetbrains.yaml.psi.YAMLFile;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -37,17 +38,10 @@ public class YamlHandler implements IExtensionHandler {
         try {
             // 方法1: 使用SnakeYAML直接验证YAML语法
             Yaml yaml = new Yaml();
-            yaml.load(input);
-
-            // 方法2: 通过PSI创建文件进行二次验证
-            PsiFile tempFile = PsiFileFactory.getInstance(project)
-                    .createFileFromText("Temp121" + "." + getExtensionName(), YAMLFileType.YML, input);
-
-            if (tempFile instanceof YAMLFile) {
-                // 可以进一步检查YAML文件的结构完整性
+            Object load = yaml.load(input);
+            if (load instanceof Map || load instanceof List) {
                 return new FileInfo(getExtensionName());
             }
-
         } catch (YAMLException e) {
             // YAML解析错误，说明格式无效
             logger.info("Invalid YAML format: " + e.getMessage());
