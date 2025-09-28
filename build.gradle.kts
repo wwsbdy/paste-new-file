@@ -14,7 +14,7 @@ version = "${properties("plugin.version")}-222"
 intellij {
     version.set(properties("intellij.version"))
     type.set(properties("intellij.type"))
-    plugins.set(listOf("com.intellij.java"))
+    plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin", "org.jetbrains.plugins.yaml"))
 }
 
 repositories {

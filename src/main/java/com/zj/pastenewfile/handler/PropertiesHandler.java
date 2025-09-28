@@ -1,4 +1,4 @@
-package com.zj.pastenewfile.handler.extension;
+package com.zj.pastenewfile.handler;
 
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
@@ -10,27 +10,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Properties;
 
 /**
  * @author : jie.zhou
- * @date : 2025/9/24
+ * @date : 2025/9/28
  */
-public class SqlHandler implements IExtensionHandler {
-
-    private static final Set<String> EXTENSIONS = new HashSet<>(
-            Arrays.asList(
-                    "select", "insert", "update", "delete", "create", "alter",
-                    "drop", "truncate", "rename", "grant", "revoke", "call", "execute", "begin", "commit",
-                    "rollback", "set", "show", "desc", "explain", "use")
-    );
-
+public class PropertiesHandler implements ILanguageHandler {
     @Override
     public @NotNull String getExtensionName() {
-        return "sql";
+        return "properties";
     }
 
     @Override
@@ -38,11 +32,28 @@ public class SqlHandler implements IExtensionHandler {
         if (StringUtils.isBlank(input)) {
             return null;
         }
-        input = input.trim();
-        input = input.toLowerCase().substring(0, Math.min(10, input.length()));
-        return input.startsWith("--")
-                || EXTENSIONS.stream().anyMatch(input::startsWith)
-                ? new FileInfo(getExtensionName()) : null;
+
+        Properties properties = new Properties();
+
+        // 将字符串转换为输入流进行Properties格式验证
+        try (InputStream inputStream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
+            // 尝试加载Properties，如果格式错误会抛出IOException
+            properties.load(inputStream);
+            if (!properties.isEmpty()) {
+                return new FileInfo(getExtensionName());
+            }
+
+        } catch (IOException e) {
+            // 捕获IOException说明Properties格式无效
+            System.err.println("Invalid Properties format: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            // 处理其他可能的异常
+            System.err.println("Error processing Properties: " + e.getMessage());
+            return null;
+        }
+
+        return null;
     }
 
     @Override
