@@ -20,6 +20,10 @@ import java.util.Objects;
  */
 public interface ILanguageHandler {
 
+    default int order() {
+        return Integer.MAX_VALUE;
+    }
+
     @NotNull
     String getExtensionName();
 

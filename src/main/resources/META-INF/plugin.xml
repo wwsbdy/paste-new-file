@@ -27,6 +27,8 @@
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="java-support.xml">com.intellij.java</depends>
     <depends optional="true" config-file="database-support.xml">com.intellij.database</depends>
+    <depends optional="true" config-file="kotlin-support.xml">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="yaml-support.xml">org.jetbrains.plugins.yaml</depends>
 
 
     <actions>
