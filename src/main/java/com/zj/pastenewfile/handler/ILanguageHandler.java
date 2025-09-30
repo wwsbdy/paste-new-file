@@ -12,13 +12,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * {@link  com.zj.pastenewfile.utils.LanguageUtils}
+ *
  * @author : jie.zhou
  * @date : 2025/9/23
  */
-public interface ILanguageHandler {
+public interface ILanguageHandler extends Serializable {
 
     default int order() {
         return Integer.MAX_VALUE;

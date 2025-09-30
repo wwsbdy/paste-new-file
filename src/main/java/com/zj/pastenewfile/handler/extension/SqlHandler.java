@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.zj.pastenewfile.enums.HandlerEnum;
 import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,11 @@ public class SqlHandler implements IExtensionHandler {
                     "drop", "truncate", "rename", "grant", "revoke", "call", "execute", "begin", "commit",
                     "rollback", "set", "show", "desc", "explain", "use")
     );
+
+    @Override
+    public int order() {
+        return HandlerEnum.SQL.getSort();
+    }
 
     @Override
     public @NotNull String getExtensionName() {

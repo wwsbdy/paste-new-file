@@ -1,6 +1,7 @@
 package com.zj.pastenewfile.handler;
 
 import com.intellij.ide.highlighter.HtmlFileType;
+import com.zj.pastenewfile.enums.HandlerEnum;
 
 import java.util.regex.Pattern;
 
@@ -13,5 +14,10 @@ public class HtmlHandler extends DefaultHandler {
 
     public HtmlHandler() {
         super(HtmlFileType.INSTANCE, PATTERN_HTML_ROOT);
+    }
+
+    @Override
+    public int order() {
+        return HandlerEnum.HTML.getSort();
     }
 }

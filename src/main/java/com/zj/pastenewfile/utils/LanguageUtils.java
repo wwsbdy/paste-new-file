@@ -2,14 +2,18 @@ package com.zj.pastenewfile.utils;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
-import com.zj.pastenewfile.handler.*;
+import com.zj.pastenewfile.handler.ILanguageHandler;
+import com.zj.pastenewfile.handler.TxtHandler;
+import com.zj.pastenewfile.handler.extension.IExtensionHandler;
 import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author : jie.zhou
@@ -20,21 +24,16 @@ public class LanguageUtils {
     private static final List<ILanguageHandler> HANDLERS;
     private static final ExtensionPointName<ILanguageHandler> EP_NAME =
             ExtensionPointName.create("com.zj.paste-new-file.languageFileHandler");
-    private static final JsonHandler JSON_HANDLER = new JsonHandler();
-    private static final HtmlHandler HTML_HANDLER = new HtmlHandler();
-    private static final XmlHandler XML_HANDLER = new XmlHandler();
-    private static final TxtHandler TXT_HANDLER = new TxtHandler();
-    private static final PropertiesHandler PROPERTIES_HANDLER = new PropertiesHandler();
 
     static {
-        HANDLERS = new ArrayList<>();
-        HANDLERS.addAll(EP_NAME.getExtensionList());
-
-        HANDLERS.add(JSON_HANDLER);
-        HANDLERS.add(HTML_HANDLER);
-        HANDLERS.add(XML_HANDLER);
-        HANDLERS.add(PROPERTIES_HANDLER);
-        HANDLERS.add(TXT_HANDLER);
+        Function<ILanguageHandler, Integer> order = (handler) -> {
+            // 第一优先级：IExtensionHandler 排在最前（返回0），其他类型排在后面（返回1）
+            return (handler instanceof IExtensionHandler) ? 0 : 1;
+        };
+        HANDLERS = EP_NAME.getExtensionList()
+                .stream()
+                .sorted(Comparator.comparing(order).thenComparing(ILanguageHandler::order))
+                .collect(Collectors.toList());
     }
 
     public static List<ILanguageHandler> getAllHandlers() {

@@ -1,5 +1,5 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.zj.paste-new-file">
-        <languageFileHandler implementation="com.zj.pastenewfile.handler.extension.SqlHandler"/>
+        <languageFileHandler id="SqlHandler" implementation="com.zj.pastenewfile.handler.extension.SqlHandler"/>
     </extensions>
 </idea-plugin>

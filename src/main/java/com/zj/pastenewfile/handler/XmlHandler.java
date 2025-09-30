@@ -1,6 +1,7 @@
 package com.zj.pastenewfile.handler;
 
 import com.intellij.ide.highlighter.XmlFileType;
+import com.zj.pastenewfile.enums.HandlerEnum;
 
 import java.util.regex.Pattern;
 
@@ -14,4 +15,10 @@ public class XmlHandler extends DefaultHandler {
     public XmlHandler() {
         super(XmlFileType.INSTANCE, PATTERN_ANGLE_BRACKET_START);
     }
+
+    @Override
+    public int order() {
+        return HandlerEnum.XML.getSort();
+    }
+
 }

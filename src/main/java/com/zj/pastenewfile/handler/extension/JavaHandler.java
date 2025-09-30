@@ -5,6 +5,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.zj.pastenewfile.enums.HandlerEnum;
 import com.zj.pastenewfile.utils.log.Logger;
 import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,11 @@ import java.util.Objects;
 public class JavaHandler implements IExtensionHandler {
 
     private static final Logger logger = Logger.getInstance(JavaHandler.class);
+
+    @Override
+    public int order() {
+        return HandlerEnum.JAVA.getSort();
+    }
 
     @Override
     public @NotNull String getExtensionName() {

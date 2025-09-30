@@ -27,6 +27,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="java-support.xml">com.intellij.java</depends>
     <depends optional="true" config-file="database-support.xml">com.intellij.database</depends>
+    <!-- https://plugins.jetbrains.com/docs/intellij/plugin-dependencies.html?from=DevkitPluginXmlInspection#preparing-sandbox -->
     <depends optional="true" config-file="kotlin-support.xml">org.jetbrains.kotlin</depends>
     <depends optional="true" config-file="yaml-support.xml">org.jetbrains.plugins.yaml</depends>
 
@@ -42,10 +43,17 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.zj.pastenewfile.setting.Settings"/>
     </extensions>
+    <extensions defaultExtensionNs="com.zj.paste-new-file">
+        <languageFileHandler id="JsonHandler" implementation="com.zj.pastenewfile.handler.JsonHandler"/>
+        <languageFileHandler id="HtmlHandler" implementation="com.zj.pastenewfile.handler.HtmlHandler"/>
+        <languageFileHandler id="XmlHandler" implementation="com.zj.pastenewfile.handler.XmlHandler"/>
+        <languageFileHandler id="TxtHandler" implementation="com.zj.pastenewfile.handler.TxtHandler"/>
+        <languageFileHandler id="PropertiesHandler" implementation="com.zj.pastenewfile.handler.PropertiesHandler"/>
+    </extensions>
 
     <extensionPoints>
         <extensionPoint name="languageFileHandler"
-                        interface="com.zj.pastenewfile.handler.extension.IExtensionHandler"
+                        interface="com.zj.pastenewfile.handler.ILanguageHandler"
                         dynamic="true"/>
     </extensionPoints>
 </idea-plugin>

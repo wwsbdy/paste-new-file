@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.zj.pastenewfile.enums.HandlerEnum;
 import com.zj.pastenewfile.utils.log.Logger;
 import com.zj.pastenewfile.vo.FileInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,11 @@ import java.util.Objects;
 public class YamlHandler implements IExtensionHandler {
 
     private static final Logger logger = Logger.getInstance(YamlHandler.class);
+
+    @Override
+    public int order() {
+        return HandlerEnum.YAML.getSort();
+    }
 
     @Override
     public @NotNull String getExtensionName() {

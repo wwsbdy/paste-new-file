@@ -1,6 +1,7 @@
 package com.zj.pastenewfile.handler;
 
 import com.intellij.json.JsonFileType;
+import com.zj.pastenewfile.enums.HandlerEnum;
 
 import java.util.regex.Pattern;
 
@@ -14,4 +15,10 @@ public class JsonHandler extends DefaultHandler {
     public JsonHandler() {
         super(JsonFileType.INSTANCE, PATTERN_JSON_START);
     }
+
+    @Override
+    public int order() {
+        return HandlerEnum.JSON.getSort();
+    }
+
 }
