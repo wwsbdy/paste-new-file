@@ -81,15 +81,7 @@ public class KotlinHandler implements IExtensionHandler {
                 }
                 ktFile.setName(finalFileName);
             });
-//            CommandProcessor.getInstance().executeCommand(project, () -> {
-//                // 2. 替换/添加 package
-//                PsiPackage aPackage = JavaDirectoryService.getInstance().getPackage(directory);
-//                if (Objects.nonNull(aPackage) && StringUtils.isNotBlank(aPackage.getQualifiedName())) {
-//                    String pkg = aPackage.getQualifiedName();
-//                    ktFile.setPackageFqName(new FqName(pkg));
-//                }
-//                ktFile.setName(finalFileName);
-//            }, RefactoringBundle.message("copy.handler.copy.files.directories"), null);
+            checkRenameClass(fileName, ktFile, project);
             file = ktFile;
         } else {
             // fallback: 无法解析成 Java 文件
@@ -97,7 +89,7 @@ public class KotlinHandler implements IExtensionHandler {
             file = PsiFileFactory.getInstance(project)
                     .createFileFromText(fileName, KotlinFileType.INSTANCE, input);
         }
-        rename(directory, file, fileName);
+        addFile(project, directory, file);
         return true;
     }
 
@@ -106,29 +98,32 @@ public class KotlinHandler implements IExtensionHandler {
         Project project = psiFile.getProject();
         if (psiFile instanceof KtFile) {
             KtFile ktFile = (KtFile) psiFile;
-            KtDeclaration[] declarations = ktFile.getDeclarations().toArray(new KtDeclaration[0]);
-            if (declarations.length > 0 && declarations[0] instanceof KtClass) {
-                String newClass = renameFileName.replaceAll("." + getExtensionName(), "");
-                String oldClass = declarations[0].getName();
-                if (!newClass.equals(oldClass)) {
-                    KtClass ktClass = (KtClass) declarations[0];
-                    IExtensionHandler.super.rename(directory, psiFile, renameFileName);
-                    CommandProcessor.getInstance().executeCommand(project, () -> {
-//                        RenameUtil.findUsages(ktClass, newClass, GlobalSearchScope.fileScope(ktFile), true, true, Collections.singletonMap(ktClass, newClass));
-                        RenameProcessor renameProcessor = new RenameProcessor(project, ktClass, newClass, new LocalSearchScope(ktClass), false, false);
+            checkRenameClass(renameFileName, ktFile, project);
+        }
+        IExtensionHandler.super.rename(directory, psiFile, renameFileName);
+    }
 
-                        renameProcessor.run();
-                    }, RefactoringBundle.message("copy.handler.copy.files.directories"), null);
-                    WriteCommandAction.runWriteCommandAction(project, () -> {
-                        ktClass.setName(newClass);
-                    });
-                }
+    private void checkRenameClass(@NotNull String renameFileName, KtFile ktFile, Project project) {
+        KtDeclaration[] declarations = ktFile.getDeclarations().toArray(new KtDeclaration[0]);
+        if (declarations.length > 0 && declarations[0] instanceof KtClass) {
+            String newClass = renameFileName.replaceAll("." + getExtensionName(), "");
+            String oldClass = declarations[0].getName();
+            if (!newClass.equals(oldClass)) {
+                KtClass ktClass = (KtClass) declarations[0];
+                renameClass(project, ktClass, newClass);
             }
         }
+    }
+
+    private void renameClass(Project project, KtClass ktClass, String newClass) {
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+//                        RenameUtil.findUsages(ktClass, newClass, GlobalSearchScope.fileScope(ktFile), true, true, Collections.singletonMap(ktClass, newClass));
+            RenameProcessor renameProcessor = new RenameProcessor(project, ktClass, newClass, new LocalSearchScope(ktClass), false, false);
+
+            renameProcessor.run();
+        }, RefactoringBundle.message("copy.handler.copy.files.directories"), null);
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            if (!checkFileExist(directory, psiFile.getName())) {
-                directory.add(psiFile);
-            }
+            ktClass.setName(newClass);
         });
     }
 }
