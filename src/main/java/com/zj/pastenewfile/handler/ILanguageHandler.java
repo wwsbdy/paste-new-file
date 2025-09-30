@@ -55,10 +55,12 @@ public interface ILanguageHandler extends Serializable {
             if (checkFileExist(directory, renameFileName)) {
                 return;
             }
-            rename(psiFile, renameFileName);
+            rename(directory, psiFile, renameFileName);
         }
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            directory.add(psiFile);
+            if (!checkFileExist(directory, psiFile.getName())) {
+                directory.add(psiFile);
+            }
             // 跳转到文件
             PsiFile jumpFile = directory.findFile(psiFile.getName());
             if (jumpFile != null) {
@@ -67,7 +69,7 @@ public interface ILanguageHandler extends Serializable {
         });
     }
 
-    default void rename(@NotNull PsiFile psiFile, String renameFileName) {
+    default void rename(@NotNull PsiDirectory directory, @NotNull PsiFile psiFile, @NotNull String renameFileName) {
         psiFile.setName(renameFileName);
     }
 

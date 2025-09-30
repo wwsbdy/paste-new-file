@@ -98,7 +98,7 @@ public class JavaHandler implements IExtensionHandler {
     }
 
     @Override
-    public void rename(@NotNull PsiFile psiFile, String renameFileName) {
+    public void rename(@NotNull PsiDirectory directory, @NotNull PsiFile psiFile, @NotNull String renameFileName) {
         Project project = psiFile.getProject();
         if (psiFile instanceof PsiJavaFile) {
             PsiJavaFile javaFile = (PsiJavaFile) psiFile;
@@ -108,7 +108,7 @@ public class JavaHandler implements IExtensionHandler {
                 renameClass(newName, psiClass, project);
             }
         }
-        IExtensionHandler.super.rename(psiFile, renameFileName);
+        IExtensionHandler.super.rename(directory, psiFile, renameFileName);
     }
 
     public void renameClass(String newName, PsiClass psiClass, Project project) {
